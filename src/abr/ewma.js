@@ -4,7 +4,6 @@
  */
 
 export class EWMA {
-
   //  About half of the estimated value will be from the last |halfLife| samples by weight.
   constructor (halfLife) {
     // Larger values of alpha expire historical data more slowly
@@ -32,4 +31,3 @@ export class EWMA {
     }
   }
 }
-

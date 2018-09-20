@@ -31,7 +31,7 @@ export class CapLevelHandler extends EventHandler {
 
   onFpsDropLevelCapping (data) {
     // Don't add a restricted level more than once
-    if (CapLevelManager.isLevelAllowed(data.droppedLevel, this.restrictedLevels)) {
+    if (CapLevelHandler.isLevelAllowed(data.droppedLevel, this.restrictedLevels)) {
       this.restrictedLevels.push(data.droppedLevel);
     }
   }
@@ -94,10 +94,10 @@ export class CapLevelHandler extends EventHandler {
     }
 
     const validLevels = this.levels.filter((level, index) =>
-      CapLevelManager.isLevelAllowed(index, this.restrictedLevels) && index <= capLevelIndex
+      CapLevelHandler.isLevelAllowed(index, this.restrictedLevels) && index <= capLevelIndex
     );
 
-    return CapLevelManager.getMaxLevelByMediaSize(validLevels, this.mediaWidth, this.mediaHeight);
+    return CapLevelHandler.getMaxLevelByMediaSize(validLevels, this.mediaWidth, this.mediaHeight);
   }
 
   _startCapping () {
@@ -127,7 +127,7 @@ export class CapLevelHandler extends EventHandler {
     const media = this.media;
     if (media) {
       width = media.width || media.clientWidth || media.offsetWidth;
-      width *= CapLevelManager.contentScaleFactor;
+      width *= CapLevelHandler.contentScaleFactor;
     }
     return width;
   }
@@ -137,7 +137,7 @@ export class CapLevelHandler extends EventHandler {
     const media = this.media;
     if (media) {
       height = media.height || media.clientHeight || media.offsetHeight;
-      height *= CapLevelManager.contentScaleFactor;
+      height *= CapLevelHandler.contentScaleFactor;
     }
     return height;
   }
@@ -184,4 +184,3 @@ export class CapLevelHandler extends EventHandler {
     return maxLevelIndex;
   }
 }
-

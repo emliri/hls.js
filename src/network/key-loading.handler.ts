@@ -6,7 +6,6 @@ import { NetworkEngineContextMap, NetworkEngine, NetworkEngineCallbacks, Network
 import { MediaFragment } from '../m3u8/media-fragment';
 
 export class KeyLoadingHandler extends EventHandler {
-
   private _loaders: {[type: string]: NetworkEngine};
 
   private _keyData: Uint8Array;
@@ -52,8 +51,8 @@ export class KeyLoadingHandler extends EventHandler {
       this._keyData = null;
 
       let loaderContext: NetworkEngineContext,
-          loaderConfig: NetworkEngineLoadOptions,
-          loaderCallbacks: NetworkEngineCallbacks;
+        loaderConfig: NetworkEngineLoadOptions,
+        loaderCallbacks: NetworkEngineCallbacks;
 
       loaderContext = {
         type: NetworkEngineContextType.KEY,
@@ -84,7 +83,6 @@ export class KeyLoadingHandler extends EventHandler {
       };
 
       frag.loader.load(loaderContext, loaderConfig, loaderCallbacks);
-
     } else if (this._keyData) {
       // we already loaded this key, return it
       decryptdata.key = this._keyData;
@@ -123,4 +121,3 @@ export class KeyLoadingHandler extends EventHandler {
     this.hls.trigger(Event.ERROR, { type: ErrorType.NETWORK_ERROR, details: ErrorDetail.KEY_LOAD_TIMEOUT, fatal: false, frag: frag });
   }
 }
-

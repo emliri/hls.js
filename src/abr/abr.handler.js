@@ -316,4 +316,3 @@ export class AbrHandler extends EventHandler {
     this._nextAutoLevel = nextLevel;
   }
 }
-

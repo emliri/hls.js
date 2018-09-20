@@ -4,7 +4,7 @@
 import { logger } from '../../utils/logger';
 import { ErrorType, ErrorDetail } from '../../errors';
 
-import {Event} from '../../events';
+import { Event } from '../../events';
 
 import { getSelfScope } from '../utils/get-self-scope';
 

@@ -74,5 +74,3 @@ hlsDefaultConfig.captionsTextTrack1Label = 'English'; // used by timeline-contro
 hlsDefaultConfig.captionsTextTrack1LanguageCode = 'en'; // used by timeline-controller
 hlsDefaultConfig.captionsTextTrack2Label = 'Spanish'; // used by timeline-controller
 hlsDefaultConfig.captionsTextTrack2LanguageCode = 'es'; // used by timeline-controller
-
-

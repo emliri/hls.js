@@ -28,28 +28,28 @@ import { PlaylistLoadingHandler } from './network/playlist-loading.handler';
 import { FragmentLoadingHandler } from './network/fragment-loading.handler';
 import { KeyLoadingHandler } from './network/key-loading.handler';
 
-import {AbrHandler} from './abr/abr.handler';
-import {CapLevelHandler} from './abr/cap-level.handler';
+import { AbrHandler } from './abr/abr.handler';
+import { CapLevelHandler } from './abr/cap-level.handler';
 
 import { MSEProxyHandler } from './media-source-api/mse-proxy.handler';
 
-import {FrameDropMonitor} from './abr/frame-drop-monitor.handler';
+import { FrameDropMonitor } from './abr/frame-drop-monitor.handler';
 
-import {MediaVariantsHandler} from './track-controller/media-variants.handler';
-import {AudioTracksHandler} from './track-controller/audio-tracks.handler';
-import {SubtitleTracksHandler} from './track-controller/subtitle-tracks.handler';
-import {Id3TrackHandler } from './text/id3-track.handler';
+import { MediaVariantsHandler } from './track-controller/media-variants.handler';
+import { AudioTracksHandler } from './track-controller/audio-tracks.handler';
+import { SubtitleTracksHandler } from './track-controller/subtitle-tracks.handler';
+import { Id3TrackHandler } from './text/id3-track.handler';
 
-import {EMEProxyHandler} from './drm/eme-proxy.handler';
+import { EMEProxyHandler } from './drm/eme-proxy.handler';
 
-import {TimelineRenderer} from './text/timeline-renderer';
+import { TimelineRenderer } from './text/timeline-renderer';
 
 import { MediaFragmentTracker } from './stream-scheduler/media-fragment-tracker';
 import AudioStreamController from './stream-scheduler/audio-stream-controller';
 import SubtitleStreamController from './stream-scheduler/subtitle-stream-controller';
-import {StreamScheduler} from './stream-scheduler/stream-controller';
+import { StreamScheduler } from './stream-scheduler/stream-controller';
 
-import {NetworkEngineSetupFn} from './network/network-engine';
+import { NetworkEngineSetupFn } from './network/network-engine';
 
 declare const __VERSION__: string;
 
@@ -132,10 +132,6 @@ export enum AlternateMediaType {
   SUBTITLES = 'SUBTITLES'
 }
 
-export type AlternateMediaSet = {
-  [type in AlternateMediaType]: AlternateMediaTrack[]
-}
-
 export type MediaVariantDetails = {
   PTSKnown: boolean,
   fragments: MediaFragment[],
@@ -160,6 +156,25 @@ export type MediaVariantDetails = {
 
 };
 
+export type AlternateMediaTrack = {
+  id: number,
+  groupId: string,
+  autoselect: boolean,
+  default: boolean,
+  forced: boolean,
+  lang: string,
+  name: string,
+  type: AlternateMediaType
+  url: string,
+  details?: MediaVariantDetails
+  audioCodec?: string,
+  subtitleCodec?: string
+};
+
+export type AlternateMediaSet = {
+  [type in AlternateMediaType]: AlternateMediaTrack[]
+};
+
 export type QualityLevel = {
   attrs: AttrList,
   audioCodec: string,
@@ -176,21 +191,6 @@ export type QualityLevel = {
   audioGroupdIds: string[],
   textGroupdIds: string[],
   details: MediaVariantDetails
-};
-
-export type AlternateMediaTrack = {
-  id: number,
-  groupId: string,
-  autoselect: boolean,
-  default: boolean,
-  forced: boolean,
-  lang: string,
-  name: string,
-  type: AlternateMediaType
-  url: string,
-  details?: MediaVariantDetails
-  audioCodec?: string,
-  subtitleCodec?: string
 };
 
 export type AudioTrack = AlternateMediaTrack & {
@@ -334,7 +334,6 @@ export default class Hls extends Observer {
     this.playlistLoader = new PlaylistLoadingHandler(this);
     this.fragmentLoader = new FragmentLoadingHandler(this);
     this.keyLoader = new KeyLoadingHandler(this);
-
 
     // Streaming
     this.fragmentTracker = new MediaFragmentTracker(this); // order matters

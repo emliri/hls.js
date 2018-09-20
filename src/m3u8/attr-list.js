@@ -85,4 +85,3 @@ export class AttrList {
     return attrs;
   }
 }
-

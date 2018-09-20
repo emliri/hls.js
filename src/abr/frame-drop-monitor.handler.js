@@ -5,7 +5,6 @@ import { logger } from '../utils/logger';
 const { performance } = window;
 
 export class FrameDropMonitor extends EventHandler {
-
   constructor (hls) {
     super(hls, Event.MEDIA_ATTACHING);
   }

@@ -352,4 +352,3 @@ export class TimelineRenderer extends EventHandler {
     return actualCCBytes;
   }
 }
-

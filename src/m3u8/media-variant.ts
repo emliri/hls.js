@@ -3,12 +3,11 @@ import { MediaFragment } from './media-fragment';
 import { M3U8Parser } from './m3u8-parser';
 import { NetworkEngineContextType } from '../network/network-engine';
 
-export function createVariantFromM3u8(
+export function createVariantFromM3u8 (
   data: string, url: string,
   levelId: number,
   levelType: MediaVariantType,
   levelUrlId: number): MediaVariant {
-
   const levelDetails = M3U8Parser.parseLevelPlaylist(data, url, levelId, levelType, levelUrlId);
 
   return levelDetails;
@@ -17,7 +16,7 @@ export enum MediaVariantType {
   MAIN = 'main',
   AUDIO = 'audio',
   SUBTITLE = 'subtitle'
-};
+}
 
 export class MediaVariant implements MediaVariantDetails {
   PTSKnown: boolean = false;
@@ -51,7 +50,7 @@ export class MediaVariant implements MediaVariantDetails {
 }
 
 export class MediaVariantList extends Array<MediaVariant> {
-  constructor(array: MediaVariant[]) {
+  constructor (array: MediaVariant[]) {
     super();
     array.forEach((track) => this.push(track));
   }

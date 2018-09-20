@@ -9,7 +9,6 @@ import { MediaFragment } from './media-fragment';
  * @returns {*|null} fragment - The best matching fragment
  */
 export function findFragmentByPDT (fragments: MediaFragment[], pdtVal: number, maxFragLookUpTolerance: number): MediaFragment {
-
   if (!Array.isArray(fragments) || !fragments.length || !Number.isFinite(pdtVal)) {
     return null;
   }
@@ -45,13 +44,12 @@ export function findFragmentByPDT (fragments: MediaFragment[], pdtVal: number, m
  * @returns {*} foundFrag - The best matching fragment
  */
 
-function makeCompareFragmentFn(bufferEnd, maxFragLookUpTolerance) {
+function makeCompareFragmentFn (bufferEnd, maxFragLookUpTolerance) {
   return (fragment: MediaFragment) => compareFragmentWithTolerance(fragment, bufferEnd, maxFragLookUpTolerance);
 }
 
 export function findFragmentByPTS (fragPrevious: MediaFragment, fragments: MediaFragment[],
   bufferEnd: number = 0, maxFragLookUpTolerance: number = 0): MediaFragment {
-
   const fragNext = fragPrevious ? fragments[fragPrevious.sn - fragments[0].sn + 1] : null;
   // Prefer the next fragment if it's within tolerance
   if (fragNext && !compareFragmentWithTolerance(fragNext, bufferEnd, maxFragLookUpTolerance)) {

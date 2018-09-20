@@ -1,7 +1,6 @@
 import * as URLToolkit from 'url-toolkit';
 
 export class LevelKey {
-
   method: string;
   key: Uint8Array;
   iv: Uint8Array;

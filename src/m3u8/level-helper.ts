@@ -118,12 +118,12 @@ export function updateFragPTSDTS (details: MediaVariant, frag: MediaFragment,
 
 export function mergeDetails (oldDetails: MediaVariant, newDetails: MediaVariant) {
   let start = Math.max(oldDetails.startSN, newDetails.startSN) - newDetails.startSN,
-      end = Math.min(oldDetails.endSN, newDetails.endSN) - newDetails.startSN,
-      delta = newDetails.startSN - oldDetails.startSN,
-      oldfragments = oldDetails.fragments,
-      newfragments = newDetails.fragments,
-      ccOffset = 0,
-      PTSFrag;
+    end = Math.min(oldDetails.endSN, newDetails.endSN) - newDetails.startSN,
+    delta = newDetails.startSN - oldDetails.startSN,
+    oldfragments = oldDetails.fragments,
+    newfragments = newDetails.fragments,
+    ccOffset = 0,
+    PTSFrag;
 
   // potentially retrieve cached initsegment
   if (newDetails.initSegment && oldDetails.initSegment) {

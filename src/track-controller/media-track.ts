@@ -1,9 +1,8 @@
-import { AlternateMediaTrack, AlternateMediaType, AlternateMediaSet, MediaVariantDetails, QualityLevel } from "../hls";
-import { M3U8Parser } from "../m3u8/m3u8-parser";
+import { AlternateMediaTrack, AlternateMediaType, AlternateMediaSet, MediaVariantDetails, QualityLevel } from '../hls';
+import { M3U8Parser } from '../m3u8/m3u8-parser';
 import { logger } from '../utils/logger';
 
-export function createTrackListsFromM3u8(data: string, baseUrl: string, levels: QualityLevel[]): AlternateMediaSet {
-
+export function createTrackListsFromM3u8 (data: string, baseUrl: string, levels: QualityLevel[]): AlternateMediaSet {
   const audioGroups = levels.map(level => ({
     id: level.attrs['AUDIO'],
     codec: level.audioCodec
@@ -39,7 +38,6 @@ export function createTrackListsFromM3u8(data: string, baseUrl: string, levels: 
 }
 
 export class MediaTrack implements AlternateMediaTrack {
-
   groupId: string = null;
   autoselect: boolean = false;
   default: boolean = false;
@@ -53,16 +51,16 @@ export class MediaTrack implements AlternateMediaTrack {
   audioCodec?: string
   subtitleCodec?: string
 
-  constructor(
+  constructor (
     public type: AlternateMediaType,
-    public id: number,
+    public id: number
   ) {
 
   }
 }
 
 export class MediaTrackList extends Array<MediaTrack> {
-  constructor(array: MediaTrack[]) {
+  constructor (array: MediaTrack[]) {
     super();
     array.forEach((track) => this.push(track));
   }

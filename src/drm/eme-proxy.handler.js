@@ -486,4 +486,3 @@ export class EMEProxyHandler extends EventHandler {
     this._attemptKeySystemAccess(KeySystems.WIDEVINE, audioCodecs, videoCodecs);
   }
 }
-

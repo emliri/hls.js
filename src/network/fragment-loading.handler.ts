@@ -7,12 +7,11 @@ import { NetworkEngine,
   NetworkEngineContext,
   NetworkEngineCallbacks,
   NetworkEngineContextType,
-  NetworkEngineLoadOptions} from './network-engine';
+  NetworkEngineLoadOptions } from './network-engine';
 import { MediaFragment } from '../m3u8/media-fragment';
 import { MediaVariantType } from '../m3u8/media-variant';
 
 export class FragmentLoadingHandler extends EventHandler {
-
   private _loaders: {[type: string]: NetworkEngine};
 
   constructor (hls) {

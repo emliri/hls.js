@@ -7,18 +7,17 @@ export enum MediaFragmentState {
   APPENDING = 'APPENDING',
   PARTIAL = 'PARTIAL',
   OK = 'OK'
-};
+}
 
 export type MediaFragmentEntity = {
   body: MediaFragment,
   range: TimeRanges,
   buffered: boolean
-}
+};
 
 const DEFAULT_BUFFER_PADDING = 0.2;
 
 export class MediaFragmentTracker extends EventHandler {
-
   private bufferPadding: number;
   private fragments: {
     [key: string]: MediaFragmentEntity
@@ -163,8 +162,6 @@ export class MediaFragmentTracker extends EventHandler {
     };
   }
 
-
-
   /**
    * Gets the partial fragment for a certain time
    * @param {Number} time
@@ -280,7 +277,7 @@ export class MediaFragmentTracker extends EventHandler {
    */
   hasFragment (fragment) {
     const fragKey = fragment.getKey();
-    return !! this.fragments[fragKey];
+    return !!this.fragments[fragKey];
   }
 
   /**

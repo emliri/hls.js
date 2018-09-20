@@ -8,7 +8,7 @@ import { Event } from '../events';
 import { MediaFragmentState } from './media-fragment-tracker';
 import { MediaFragment } from '../m3u8/media-fragment';
 
-import {PlaylistLoadingHandler} from '../network/playlist-loading.handler'
+import { PlaylistLoadingHandler } from '../network/playlist-loading.handler';
 import * as LevelHelper from '../m3u8/level-helper';
 
 import TimeRanges from '../media-source-api/time-ranges';
@@ -18,9 +18,9 @@ import { logger } from '../utils/logger';
 import { alignStream } from '../m3u8/discontinuities';
 
 import { findFragmentByPTS, findFragmentByPDT } from '../m3u8/fragment-finders';
-import {GapHandler} from './gap.handler';
+import { GapHandler } from './gap.handler';
 
-import {TaskScheduler} from '../task-scheduler';
+import { TaskScheduler } from '../task-scheduler';
 
 export const State = {
   STOPPED: 'STOPPED',
