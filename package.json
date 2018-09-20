@@ -28,7 +28,7 @@
     "build:debug": "webpack --progress --env.debug",
     "build:watch": "webpack --progress --env.debug --watch",
     "build:analyze": "ANALYZE=true webpack --progress",
-    "dev": "webpack-dev-server --progress --env.debug --port 8000",
+    "dev": "webpack-dev-server --progress --env.debug --port 8009",
     "docs": "esdoc",
     "lint": "./scripts/lint.sh",
     "lint:fix": "./scripts/lint.sh --fix",
