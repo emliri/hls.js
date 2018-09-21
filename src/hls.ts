@@ -479,7 +479,7 @@ export default class Hls extends Observer {
    * @type {number}
    */
   get currentLevel (): number {
-    return this.streamScheduler.currentLevel;
+    return this.streamScheduler.getCurrentLevelIndex();
   }
 
   /**
@@ -491,7 +491,7 @@ export default class Hls extends Observer {
   set currentLevel (newLevel: number) {
     _logger.log(`set currentLevel:${newLevel}`);
     this.loadLevel = newLevel;
-    this.streamScheduler.immediateLevelSwitch();
+    this.streamScheduler.doImmediateLevelSwitch();
   }
 
   /**
@@ -499,7 +499,12 @@ export default class Hls extends Observer {
    * @type {number}
    */
   get nextLevel (): number {
-    return this.streamScheduler.nextLevel;
+      const frag = this.streamScheduler.getNextBufferedFragment();
+      if (frag) {
+        return frag.level;
+      } else {
+        return -1;
+      }
   }
 
   /**
@@ -511,7 +516,7 @@ export default class Hls extends Observer {
   set nextLevel (newLevel: number) {
     _logger.log(`set nextLevel: ${newLevel}`);
     this.levelController.manualLevel = newLevel;
-    this.streamScheduler.nextLevelSwitch();
+    this.streamScheduler.doNextLevelSwitch();
   }
 
   /**

@@ -51,16 +51,16 @@ export class MediaFragmentTracker extends EventHandler {
    * @param {LevelType} levelType
    * @returns {Fragment|null}
    */
-  getBufferedFrag (position, levelType) {
+  getBufferedFrag (position, levelType): MediaFragment {
     const fragments = this.fragments;
     const bufferedFrags = Object.keys(fragments).filter(key => {
       const fragmentEntity = fragments[key];
       if (fragmentEntity.body.type !== levelType) {
-        return false;
+        return null;
       }
 
       if (!fragmentEntity.buffered) {
-        return false;
+        return null;
       }
 
       const frag = fragmentEntity.body;
