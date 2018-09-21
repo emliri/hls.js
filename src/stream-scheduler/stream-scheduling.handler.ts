@@ -5,7 +5,7 @@ import Demuxer from '../transmux/demux/demuxer';
 
 import { Event } from '../events';
 
-import { MediaFragmentState } from './media-fragment-tracker';
+import { MediaFragmentState, MediaFragmentTracker } from './media-fragment-tracker';
 import { MediaFragment } from '../m3u8/media-fragment';
 
 import { PlaylistLoadingHandler } from '../network/playlist-loading.handler';
@@ -36,9 +36,54 @@ export const State = {
   ERROR: 'ERROR'
 };
 
+type BufferEventData = {
+  type?: 'video'
+  startOffset?: number
+  endOffset?: number
+}
+
 const TICK_INTERVAL = 100; // how often to tick in ms
 
-export class StreamScheduler extends TaskScheduler {
+export class StreamSchedulingHandler extends TaskScheduler {
+
+  private fragmentTracker: MediaFragmentTracker;
+  private audioCodecSwap: boolean;
+  private _state: string;
+  private stallReported: boolean;
+  private gapController: any;
+  private levels: any;
+  private lastCurrentTime: any;
+  private level: number;
+  private fragLoadError: number;
+  private startFragRequested: any;
+  private bitrateTest: boolean;
+  private loadedmetadata: boolean;
+  private nextLoadPosition: any;
+  private startPosition: any;
+  private forceStartLoad: boolean;
+  private fragCurrent: any;
+  private fragPrevious: any;
+  private demuxer: any;
+  private retryDate: any;
+  private media: any;
+  private levelLastLoaded: any;
+  private mediaBuffer: any;
+  private altAudio: any;
+  private fragPlaying: any;
+  private immediateSwitch: any;
+  private previouslyPaused: any;
+  private fragLastKbps: any;
+  private onvseeking: any;
+  private onvseeked: any;
+  private onvended: any;
+  private stalled: boolean;
+  private audioCodecSwitch: boolean;
+  private stats: any;
+  private pendingBuffering: boolean;
+  private appended: boolean;
+  private videoBuffer: any;
+  private _liveSyncPosition: any;
+
   constructor (hls, fragmentTracker) {
     super(hls,
       Event.MEDIA_ATTACHED,
@@ -257,7 +302,7 @@ export class StreamScheduler extends TaskScheduler {
       // also cope with almost zero last frag duration (max last frag duration with 200ms) refer to https://github.com/video-dev/hls.js/pull/657
       if (duration - Math.max(bufferInfo.end, fragPrevious.start) <= Math.max(0.2, fragPrevious.duration)) {
         // Finalize the media stream
-        let data = {};
+        let data: BufferEventData = {};
         if (this.altAudio) {
           data.type = 'video';
         }
@@ -698,7 +743,7 @@ export class StreamScheduler extends TaskScheduler {
 
   flushMainBuffer (startOffset, endOffset) {
     this.state = State.BUFFER_FLUSHING;
-    let flushScope = { startOffset: startOffset, endOffset: endOffset };
+    let flushScope: BufferEventData = { startOffset: startOffset, endOffset: endOffset };
     // if alternate audio tracks are used, only flush video, otherwise flush everything
     if (this.altAudio) {
       flushScope.type = 'video';

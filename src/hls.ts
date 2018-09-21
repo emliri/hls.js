@@ -47,7 +47,7 @@ import { TimelineRenderer } from './text/timeline-renderer';
 import { MediaFragmentTracker } from './stream-scheduler/media-fragment-tracker';
 import AudioStreamController from './stream-scheduler/audio-stream-controller';
 import SubtitleStreamController from './stream-scheduler/subtitle-stream-controller';
-import { StreamScheduler } from './stream-scheduler/stream-controller';
+import { StreamSchedulingHandler } from './stream-scheduler/stream-scheduling.handler';
 
 import { NetworkEngineSetupFn } from './network/network-engine';
 
@@ -268,7 +268,7 @@ export default class Hls extends Observer {
   private _autoLevelCapping: number;
 
   private fragmentTracker: MediaFragmentTracker;
-  private streamScheduler: StreamScheduler;
+  private streamScheduler: StreamSchedulingHandler;
   private audioStreamController: AudioStreamController;
   private subtitleStreamController: SubtitleStreamController;
 
@@ -337,7 +337,7 @@ export default class Hls extends Observer {
 
     // Streaming
     this.fragmentTracker = new MediaFragmentTracker(this); // order matters
-    this.streamScheduler = new StreamScheduler(this, this.fragmentTracker);
+    this.streamScheduler = new StreamSchedulingHandler(this, this.fragmentTracker);
     this.audioStreamController = new AudioStreamController(this, this.fragmentTracker);
     this.subtitleStreamController = new SubtitleStreamController(this, this.fragmentTracker);
 
