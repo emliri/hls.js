@@ -50,6 +50,7 @@ import SubtitleStreamController from './stream-scheduler/subtitle-stream-control
 import { StreamSchedulingHandler } from './stream-scheduler/stream-scheduling.handler';
 
 import { NetworkEngineSetupFn } from './network/network-engine';
+import { TaskRunningService } from './task-running-service';
 
 declare const __VERSION__: string;
 
@@ -293,6 +294,8 @@ export default class Hls extends Observer {
 
   private url: string;
   private media: HTMLMediaElement;
+
+  private _taskRunningService: TaskRunningService = new TaskRunningService();
 
   /**
    * Creates an instance of an HLS client that can attach to exactly one `HTMLMediaElement`.
@@ -774,5 +777,9 @@ export default class Hls extends Observer {
     if (subtitleTrackController) {
       subtitleTrackController.subtitleDisplay = value;
     }
+  }
+
+  getTaskRunningService(): TaskRunningService {
+    return this._taskRunningService;
   }
 }
