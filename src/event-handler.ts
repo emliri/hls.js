@@ -24,14 +24,11 @@ const FORBIDDEN_EVENT_NAMES = new Set([
 export abstract class EventHandler {
   private _hls: Hls;
   private _handledEvents: string[];
-  private _useGenericHandler: boolean;
   private _debugLogEnabled: boolean;
 
   constructor (hls: Hls, ...events: Event[]) {
     this._hls = hls;
     this._handledEvents = events;
-    this._useGenericHandler = true;
-
     this.onEvent = this.onEvent.bind(this);
 
     /**

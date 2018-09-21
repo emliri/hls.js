@@ -479,7 +479,7 @@ export class MSEProxyHandler extends EventHandler {
             if (!sb.updating) {
               // reset sourceBuffer ended flag before appending segment
               sb.ended = false;
-              // logger.log(`appending ${segment.content} ${type} SB, size:${segment.data.length}, ${segment.parent}`);
+              logger.log(`appending ${segment.content} ${type} SB, size:${segment.data.length}, ${segment.parent}`);
               this.parent = segment.parent;
               sb.appendBuffer(segment.data);
               this.appendError = 0;

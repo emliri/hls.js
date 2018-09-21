@@ -538,7 +538,8 @@ export default class Hls extends Observer {
    * @type {number}
    */
   get nextLoadLevel (): number {
-    return this.levelController.nextLoadLevel;
+    return 0;
+    // return this.levelController.nextLoadLevel;
   }
 
   /**
@@ -547,7 +548,7 @@ export default class Hls extends Observer {
    * @type {number} level
    */
   set nextLoadLevel (level: number) {
-    this.levelController.nextLoadLevel = level;
+    // this.levelController.nextLoadLevel = level;
   }
 
   /**
@@ -779,7 +780,7 @@ export default class Hls extends Observer {
     }
   }
 
-  getTaskRunningService(): TaskRunningService {
+  getTaskRunningService (): TaskRunningService {
     return this._taskRunningService;
   }
 }

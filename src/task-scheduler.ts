@@ -1,13 +1,12 @@
 import { EventHandler } from './event-handler';
 import { TaskRunningService } from './task-running-service';
+import Hls from './hls';
 
 const POLL_MS = 500;
 
 export abstract class TaskScheduler extends EventHandler {
   private _tickInterval: number;
   private _tickTimer: boolean;
-  private _tickCallCount: number;
-  private _boundTick: () => void;
   private _name: string;
   private _service: TaskRunningService;
 
@@ -17,15 +16,16 @@ export abstract class TaskScheduler extends EventHandler {
    * @param {Hls} hls
    * @param  {...Event} events
    */
-  constructor (hls, ...events) {
+  constructor (hls: Hls, ...events) {
     super(hls, ...events);
+
+    this._service = hls.getTaskRunningService();
 
     const id = this._service.obtainTaskId();
 
     this._name = String(id);
     this._tickInterval = -1;
     this._tickTimer = false;
-    this._boundTick = this.tick.bind(this);
 
     this._service.registerTask(this._name, this);
     this._service.setTickSource();

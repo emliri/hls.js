@@ -30,6 +30,8 @@ export class MediaFragment {
   public readonly tagList: string[][] = [];
   public readonly programDateTime: number | null;
 
+  data: ArrayBuffer;
+
   deltaPTS: number;
   startPTS: number;
   endPTS: number;

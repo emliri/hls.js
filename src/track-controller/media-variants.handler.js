@@ -163,6 +163,8 @@ export class MediaVariantsHandler extends EventHandler {
         reason: 'no level with compatible codecs found in manifest'
       });
     }
+
+    this._setLevel(0);
   }
 
   get levels () {
@@ -174,16 +176,10 @@ export class MediaVariantsHandler extends EventHandler {
   }
 
   set level (newLevel) {
-    let levels = this._levels;
-    if (levels) {
-      newLevel = Math.min(newLevel, levels.length - 1);
-      if (this.currentLevelIndex !== newLevel || !levels[newLevel].details) {
-        this.setLevelInternal(newLevel);
-      }
-    }
+
   }
 
-  setLevelInternal (newLevel) {
+  _setLevel (newLevel) {
     const levels = this._levels;
     const hls = this.hls;
     // check if level idx is valid
@@ -469,21 +465,6 @@ export class MediaVariantsHandler extends EventHandler {
 
         this.hls.trigger(Event.LEVEL_LOADING, { url, level, id });
       }
-    }
-  }
-
-  get nextLoadLevel () {
-    if (this.manualLevelIndex !== -1) {
-      return this.manualLevelIndex;
-    } else {
-      return this.hls.nextAutoLevel;
-    }
-  }
-
-  set nextLoadLevel (nextLevel) {
-    this.level = nextLevel;
-    if (this.manualLevelIndex === -1) {
-      this.hls.nextAutoLevel = nextLevel;
     }
   }
 }

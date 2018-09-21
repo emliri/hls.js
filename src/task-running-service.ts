@@ -14,7 +14,7 @@ export class TaskRunningService {
   private _singletonInterval;
   private _singletonTimer;
 
-  obtainTaskId(): number {
+  obtainTaskId (): number {
     return this._taskLoopRegistryId++;
   }
 

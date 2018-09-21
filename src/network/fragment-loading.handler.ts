@@ -33,6 +33,8 @@ export class FragmentLoadingHandler extends EventHandler {
   }
 
   onFragLoading (data: {frag: MediaFragment}) {
+    logger.debug('onFragLoading', data);
+
     const frag = data.frag;
     const type: MediaVariantType = frag.type;
     const loaders = this._loaders;
