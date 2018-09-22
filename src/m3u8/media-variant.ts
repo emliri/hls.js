@@ -19,7 +19,7 @@ export enum MediaVariantType {
 }
 
 export class MediaVariant implements MediaVariantDetails {
-  PTSKnown: boolean = false;
+  isPtsKnown: boolean = false;
   fragments: MediaFragment[] = [];
   url: string;
   live: boolean = true;

@@ -112,7 +112,7 @@ export function updateFragPTSDTS (details: MediaVariant, frag: MediaFragment,
     updatePTS(fragments, i, i + 1);
   }
 
-  details.PTSKnown = true;
+  details.isPtsKnown = true;
   return drift;
 }
 
@@ -132,7 +132,7 @@ export function mergeDetails (oldDetails: MediaVariant, newDetails: MediaVariant
 
   // check if old/new playlists have fragments in common
   if (end < start) {
-    newDetails.PTSKnown = false;
+    newDetails.isPtsKnown = false;
     return;
   }
   // loop through overlapping SN and update startPTS , cc, and duration if any found
@@ -146,7 +146,7 @@ export function mergeDetails (oldDetails: MediaVariant, newDetails: MediaVariant
         newFrag.endPTS = oldFrag.endPTS;
         newFrag.duration = oldFrag.duration;
         newFrag.backtracked = oldFrag.backtracked;
-        newFrag.dropped = oldFrag.dropped;
+        newFrag.framesDropped = oldFrag.framesDropped;
         PTSFrag = newFrag;
       }
     }
@@ -176,5 +176,5 @@ export function mergeDetails (oldDetails: MediaVariant, newDetails: MediaVariant
   }
   // if we are here, it means we have fragments overlapping between
   // old and new level. reliable PTS info is thus relying on old level
-  newDetails.PTSKnown = oldDetails.PTSKnown;
+  newDetails.isPtsKnown = oldDetails.isPtsKnown;
 }

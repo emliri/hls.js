@@ -40,9 +40,9 @@ export class MediaFragment {
   maxStartPTS: number;
 
   loaded: number;
-  backtracked: boolean;
-  dropped: boolean;
 
+  backtracked: boolean;
+  framesDropped: number;
   rawProgramDateTime: string | null = null;
   lastByteRangeEndOffset: number;
   rawByteRange: string;

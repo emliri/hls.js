@@ -68,7 +68,7 @@ export function adjustPts (sliding: number, details: MediaVariant) {
       frag.endPTS = start + frag.duration;
     }
   });
-  details.PTSKnown = true;
+  details.isPtsKnown = true;
 }
 
 /**
@@ -83,7 +83,7 @@ export function adjustPts (sliding: number, details: MediaVariant) {
  */
 export function alignStream (lastFrag: MediaFragment, lastLevel: QualityLevel, details: MediaVariant) {
   alignDiscontinuities(lastFrag, details, lastLevel);
-  if (!details.PTSKnown && lastLevel) {
+  if (!details.isPtsKnown && lastLevel) {
     // If the PTS wasn't figured out via discontinuity sequence that means there was no CC increase within the level.
     // Aligning via Program Date Time should therefore be reliable, since PDT should be the same within the same
     // discontinuity sequence.

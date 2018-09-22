@@ -8,10 +8,11 @@ import { logger } from '../utils/logger';
 import { ErrorType, ErrorDetail } from '../errors';
 import { isCodecSupportedInMp4 } from '../media-source-api/codecs';
 import { addGroupId } from '../m3u8/level-helper';
+import { TaskScheduler } from '../task-scheduler';
 
 const { performance } = window;
 
-export class MediaVariantsHandler extends EventHandler {
+export class MediaVariantDetailsProvider extends TaskScheduler {
   constructor (hls) {
     super(hls,
       Event.MANIFEST_LOADED,

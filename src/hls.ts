@@ -35,7 +35,7 @@ import { MSEProxyHandler } from './media-source-api/mse-proxy.handler';
 
 import { FrameDropMonitor } from './abr/frame-drop-monitor.handler';
 
-import { MediaVariantsHandler } from './track-controller/media-variants.handler';
+import { MediaVariantDetailsProvider } from './track-controller/media-variants.handler';
 import { AudioTracksHandler } from './track-controller/audio-tracks.handler';
 import { SubtitleTracksHandler } from './track-controller/subtitle-tracks.handler';
 import { Id3TrackHandler } from './text/id3-track.handler';
@@ -134,7 +134,7 @@ export enum AlternateMediaType {
 }
 
 export type MediaVariantDetails = {
-  PTSKnown: boolean,
+  isPtsKnown: boolean,
   fragments: MediaFragment[],
   url: string,
   readonly hasProgramDateTime: boolean,
@@ -275,7 +275,7 @@ export default class Hls extends Observer {
 
   private audioTrackController: AudioTracksHandler;
   private subtitleTrackController: SubtitleTracksHandler;
-  private levelController: MediaVariantsHandler;
+  private mediaVariantsDetailProvider: MediaVariantDetailsProvider;
 
   private timelineRenderer: TimelineRenderer;
   private id3TrackController: Id3TrackHandler;
@@ -346,7 +346,7 @@ export default class Hls extends Observer {
 
     // Track-control
     this.audioTrackController = new AudioTracksHandler(this);
-    this.levelController = new MediaVariantsHandler(this);
+    this.mediaVariantsDetailProvider = new MediaVariantDetailsProvider(this);
     this.subtitleTrackController = new SubtitleTracksHandler(this);
 
     // DRM
@@ -424,10 +424,11 @@ export default class Hls extends Observer {
 
     // FIXME: At least LevelController should be kicked off by an event instead
     //        since it doesn't even take a start-position
-    this.levelController.startLoad();
+    this.mediaVariantsDetailProvider.startLoad();
 
     // FIXME: Shouldn't all of this be kicked off by an event?
-    this.streamScheduler.startLoad(startPosition);
+    this.streamScheduler.start(startPosition);
+
     if (this.audioStreamController) {
       this.audioStreamController.startLoad(startPosition);
     }
@@ -439,19 +440,12 @@ export default class Hls extends Observer {
   stopLoad (): void {
     _logger.log('stopLoad');
 
-    this.levelController.stopLoad();
-    this.streamScheduler.stopLoad();
+    this.streamScheduler.stop();
+    this.mediaVariantsDetailProvider.stopLoad();
+
     if (this.audioStreamController) {
       this.audioStreamController.stopLoad();
     }
-  }
-
-  /**
-   * Swap through possible audio codecs in the stream (for example to switch from stereo to 5.1)
-   */
-  swapAudioCodec (): void {
-    _logger.log('swapAudioCodec');
-    this.streamScheduler.swapAudioCodec();
   }
 
   /**
@@ -471,7 +465,7 @@ export default class Hls extends Observer {
    * @type {QualityLevel[]}
    */
   get levels (): QualityLevel[] {
-    return this.levelController.levels;
+    return this.mediaVariantsDetailProvider.levels;
   }
 
   /**
@@ -515,7 +509,7 @@ export default class Hls extends Observer {
    */
   set nextLevel (newLevel: number) {
     _logger.log(`set nextLevel: ${newLevel}`);
-    this.levelController.manualLevel = newLevel;
+    this.mediaVariantsDetailProvider.manualLevel = newLevel;
     this.streamScheduler.doNextLevelSwitch();
   }
 
@@ -524,7 +518,7 @@ export default class Hls extends Observer {
    * @type {number}
    */
   get loadLevel (): number {
-    return this.levelController.level;
+    return this.mediaVariantsDetailProvider.level;
   }
 
   /**
@@ -535,7 +529,7 @@ export default class Hls extends Observer {
    */
   set loadLevel (newLevel: number) {
     _logger.log(`set loadLevel: ${newLevel}`);
-    this.levelController.manualLevel = newLevel;
+    this.mediaVariantsDetailProvider.manualLevel = newLevel;
   }
 
   /**
@@ -562,7 +556,7 @@ export default class Hls extends Observer {
    * @type {number}
    */
   get firstLevel (): number {
-    return Math.max(this.levelController.firstLevel, this.minAutoLevel);
+    return Math.max(this.mediaVariantsDetailProvider.firstLevel, this.minAutoLevel);
   }
 
   /**
@@ -571,7 +565,7 @@ export default class Hls extends Observer {
    */
   set firstLevel (newLevel: number) {
     _logger.log(`set firstLevel: ${newLevel}`);
-    this.levelController.firstLevel = newLevel;
+    this.mediaVariantsDetailProvider.firstLevel = newLevel;
   }
 
   /**
@@ -582,7 +576,7 @@ export default class Hls extends Observer {
    * @type {number}
    */
   get startLevel (): number {
-    return this.levelController.startLevel;
+    return this.mediaVariantsDetailProvider.startLevel;
   }
 
   /**
@@ -600,7 +594,7 @@ export default class Hls extends Observer {
       newLevel = Math.max(newLevel, hls.minAutoLevel);
     }
 
-    hls.levelController.startLevel = newLevel;
+    hls.mediaVariantsDetailProvider.startLevel = newLevel;
   }
 
   /**
@@ -625,7 +619,7 @@ export default class Hls extends Observer {
    * @type {boolean}
    */
   get autoLevelEnabled (): boolean {
-    return (this.levelController.manualLevel === -1);
+    return (this.mediaVariantsDetailProvider.manualLevel === -1);
   }
 
   /**
@@ -633,7 +627,7 @@ export default class Hls extends Observer {
    * @type {number}
    */
   get manualLevel (): number {
-    return this.levelController.manualLevel;
+    return this.mediaVariantsDetailProvider.manualLevel;
   }
 
   /**

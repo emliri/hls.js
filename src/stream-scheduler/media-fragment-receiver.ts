@@ -142,7 +142,7 @@ export class MediaFragmentReceiver extends EventHandler {
       this._appended = false;
 
       // time Offset is accurate if level PTS is known, or if playlist is not sliding (not live) and if media is not seeking (this is to overcome potential timestamp drifts between playlists and fragments)
-      const accurateTimeOffset = !(_media && _media.seeking) && (details.PTSKnown || !details.live);
+      const accurateTimeOffset = !(_media && _media.seeking) && (details.isPtsKnown || !details.live);
       const initSegmentData = details.initSegment ? details.initSegment.data : [];
       const audioCodec = this._getAudioCodec(currentLevel);
 
@@ -248,8 +248,8 @@ export class MediaFragmentReceiver extends EventHandler {
 
     // Detect gaps in a fragment  and try to fix it by finding a keyframe in the previous fragment (see _findFragments)
     if (data.type === 'video') {
-      frag.dropped = data.dropped;
-      if (frag.dropped) {
+      frag.framesDropped = data.dropped;
+      if (frag.framesDropped) {
         if (!frag.backtracked) {
           const levelDetails = level.details;
           if (levelDetails && frag.sn === levelDetails.startSN) {
