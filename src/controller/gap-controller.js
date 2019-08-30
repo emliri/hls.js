@@ -2,6 +2,7 @@ import { BufferHelper } from '../utils/buffer-helper';
 import { ErrorTypes, ErrorDetails } from '../errors';
 import Event from '../events';
 import { logger } from '../utils/logger';
+import { isFiniteNumber } from '../polyfills/number-isFinite';
 
 const STALL_DEBOUNCE_INTERVAL_MS = 1000;
 const STALL_HANDLING_RETRY_PERIOD_MS = 1000;
@@ -40,9 +41,9 @@ export default class GapController {
   }
 
   destroy () {
-    if (this._onMediaStalled) {
-      this.media.removeEventListener('waiting', this._onMediaStalled);
-      this.media.removeEventListener('stalled', this._onMediaStalled);
+    if (this.onMediaStalled) {
+      this.media.removeEventListener('waiting', this.onMediaStalled);
+      this.media.removeEventListener('stalled', this.onMediaStalled);
     }
   }
 
@@ -53,6 +54,21 @@ export default class GapController {
    * @param {number} previousPlayheadTime Previously read playhead position
    */
   poll (previousPlayheadTime) {
+    if (!this.hasPlayed) {
+      if (!isFiniteNumber(this.media.currentTime) || this.media.buffered.length === 0) {
+        return;
+      }
+      // Need to check what the buffer reports as start time for the first fragment appended.
+      // If within the threshold of maxBufferHole, adjust this.startPosition for _seekToStartPos().
+      const firstBufferedPosition = this.media.buffered.start(0);
+      if (Math.abs(this.media.currentTime - firstBufferedPosition) < this.config.maxBufferHole) {
+        if (!this.media.seeking) {
+          logger.warn('skipping over buffer hole on startup (first segment starts partially later than assumed)');
+          this.media.currentTime = firstBufferedPosition + SKIP_BUFFER_HOLE_STEP_SECONDS;
+        }
+      }
+    }
+
     // if we are paused and played before, don't bother at all
     if (this.hasPlayed && this.media.paused) {
       return;
@@ -89,8 +105,8 @@ export default class GapController {
 
     if (!this.onMediaStalled) {
       this.onMediaStalled = this._onMediaStalled.bind(this);
-      this.media.addEventListener('waiting', this._onMediaStalled);
-      this.media.addEventListener('stalled', this._onMediaStalled);
+      this.media.addEventListener('waiting', this.onMediaStalled);
+      this.media.addEventListener('stalled', this.onMediaStalled);
     }
 
     // we can return early here to be lazy on rewriting other member values
