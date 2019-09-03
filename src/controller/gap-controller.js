@@ -25,6 +25,17 @@ export default class GapController {
      * @private @member {number | null}
      */
     this.stallDetectedAtTime = null;
+
+    /**
+     * @private @member {number | null}
+     */
+    this.stallHandledAtTime = null;
+
+    /**
+     * @private @member {number | null}
+     */
+    this.currentPlayheadTime = null;
+
     /**
      * @private @member {boolean}
      */
@@ -34,10 +45,6 @@ export default class GapController {
      * @private @member {EventListener}
      */
     this.onMediaStalled = null;
-
-    this.stallHandledAtTime = null;
-
-    this.currentPlayheadTime = null;
   }
 
   destroy () {
