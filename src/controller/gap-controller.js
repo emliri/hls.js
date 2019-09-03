@@ -2,7 +2,7 @@ import { BufferHelper } from '../utils/buffer-helper';
 import { ErrorTypes, ErrorDetails } from '../errors';
 import Event from '../events';
 import { logger } from '../utils/logger';
-import { isFiniteNumber } from '../polyfills/number-isFinite';
+import { is } from '../polyfills/number';
 
 export const STALL_DEBOUNCE_INTERVAL_MS = 1000;
 export const STALL_HANDLING_RETRY_PERIOD_MS = 1000;
@@ -55,7 +55,7 @@ export default class GapController {
    */
   poll (previousPlayheadTime) {
     if (!this.hasPlayed) {
-      if (!isFiniteNumber(this.media.currentTime) || this.media.buffered.length === 0) {
+      if (!Number.isFinite(this.media.currentTime) || this.media.buffered.length === 0) {
         return;
       }
       console.warn('not played yet, current-time:', this.media.currentTime, 'first-buffer-pos:', this.media.buffered.start(0));
