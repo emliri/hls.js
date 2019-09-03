@@ -65,7 +65,6 @@ export default class GapController {
       if (!Number.isFinite(this.media.currentTime) || this.media.buffered.length === 0) {
         return;
       }
-      console.warn('not played yet, current-time:', this.media.currentTime, 'first-buffer-pos:', this.media.buffered.start(0));
       // Need to check what the buffer reports as start time for the first fragment appended.
       // If within the threshold of maxBufferHole, adjust this.startPosition for _seekToStartPos().
       const firstBufferedPosition = this.media.buffered.start(0);
