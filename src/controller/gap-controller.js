@@ -87,8 +87,7 @@ export default class GapController {
     }
 
     // not moving ... check if we need to handle stall
-    if (this.stallDetectedAtTime !== null ||
-      this._isMediaInPlayableState()) {
+    if (this.stallDetectedAtTime !== null || this._isMediaInPlayableState()) {
       this._handleStall();
     }
   }
