@@ -3,7 +3,8 @@ import sinon from 'sinon';
 
 import Hls from '../../../src/hls';
 
-import GapController from '../../../src/controller/gap-controller';
+import GapController from '../../../src/controller/gap-controller'; // eslint-disable-line import/no-duplicates
+import { STALL_DEBOUNCE_INTERVAL_MS } from '../../../src/controller/gap-controller'; // eslint-disable-line import/no-duplicates
 import { FragmentTracker } from '../../../src/controller/fragment-tracker';
 
 import Event from '../../../src/events';
@@ -115,23 +116,38 @@ describe('checkBuffer', function () {
 
   describe('poll', function () {
     let mockMedia;
+    let mockTimeRanges;
+    let mockTimeRangesData;
     let reportStallSpy;
     let lastCurrentTime;
-    let buffered;
+
     beforeEach(function () {
-      mockMedia = {
-        buffered: {
-          length: 1
+      mockTimeRangesData = [[100, 200], [400, 500]];
+      mockTimeRanges = {
+        length: mockTimeRangesData.length,
+        start (index) {
+          return mockTimeRangesData[index][0];
+        },
+        end (index) {
+          return mockTimeRangesData[index][1];
         }
       };
+
+      mockMedia = {
+        currentTime: 0,
+        paused: false,
+        readyState: 0,
+        buffered: mockTimeRanges,
+        addEventListener () {}
+      };
+
       gapController.media = mockMedia;
       reportStallSpy = sandbox.spy(gapController, '_reportStall');
-      buffered = mockMedia.buffered;
     });
 
     function setStalling () {
       mockMedia.paused = false;
-      mockMedia.readyState = 1;
+      mockMedia.readyState = 4;
       mockMedia.currentTime = 4;
       lastCurrentTime = 4;
     }
@@ -144,15 +160,28 @@ describe('checkBuffer', function () {
     }
 
     it('should try to fix a stall if expected to be playing', function () {
+      const clock = sandbox.useFakeTimers(0);
+
       const fixStallStub = sandbox.stub(gapController, '_tryFixBufferStall');
       setStalling();
-      gapController.poll(lastCurrentTime, buffered);
+
+      clock.tick(1);
+
+      gapController.poll(lastCurrentTime);
+
+      clock.tick(1);
+
+      console.log(gapController.hasPlayed, gapController.stallDetectedAtTime);
 
       // The first poll call made while stalling just sets stall flags
-      assert.strictEqual(typeof gapController.stalled, 'number');
+      assert.strictEqual(typeof gapController.stallDetectedAtTime, 'number');
+      assert.strictEqual(typeof gapController.stallHandledAtTime, 'number');
       assert.strictEqual(gapController.stallReported, false);
 
-      gapController.poll(lastCurrentTime, buffered);
+      clock.tick(STALL_DEBOUNCE_INTERVAL_MS);
+
+      gapController.poll(lastCurrentTime);
+
       assert(fixStallStub.calledOnce);
     });
 
@@ -160,11 +189,15 @@ describe('checkBuffer', function () {
       setNotStalling();
       gapController.stallReported = true;
       gapController.nudgeRetry = 1;
-      gapController.stalled = 4200;
-      const fixStallStub = sandbox.stub(gapController, '_tryFixBufferStall');
-      gapController.poll(lastCurrentTime, buffered);
+      gapController.stallDetectedAtTime = 4200;
+      gapController.stallHandledAtTime = 4201;
 
-      assert.strictEqual(gapController.stalled, null);
+      const fixStallStub = sandbox.stub(gapController, '_tryFixBufferStall');
+
+      gapController.poll(lastCurrentTime);
+
+      assert.strictEqual(gapController.stallDetectedAtTime, null);
+      assert.strictEqual(gapController.stallHandledAtTime, null);
       assert.strictEqual(gapController.nudgeRetry, 0);
       assert.strictEqual(gapController.stallReported, false);
       assert(fixStallStub.notCalled);
@@ -174,11 +207,11 @@ describe('checkBuffer', function () {
       setStalling();
       const clock = sandbox.useFakeTimers(0);
       clock.tick(1000);
-      gapController.stalled = 1;
-      gapController.poll(lastCurrentTime, buffered);
+      gapController.stallDetectedAtTime = 1;
+      gapController.poll(lastCurrentTime);
       assert(reportStallSpy.notCalled);
       clock.tick(1001);
-      gapController.poll(lastCurrentTime, buffered);
+      gapController.poll(lastCurrentTime);
       assert(reportStallSpy.calledOnce);
     });
   });
