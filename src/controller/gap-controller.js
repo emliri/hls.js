@@ -4,10 +4,10 @@ import Event from '../events';
 import { logger } from '../utils/logger';
 import { isFiniteNumber } from '../polyfills/number-isFinite';
 
-const STALL_DEBOUNCE_INTERVAL_MS = 1000;
-const STALL_HANDLING_RETRY_PERIOD_MS = 1000;
-const JUMP_THRESHOLD_SECONDS = 0.5; // tolerance needed as some browsers stalls playback before reaching buffered range end
-const SKIP_BUFFER_HOLE_STEP_SECONDS = 0.1;
+export const STALL_DEBOUNCE_INTERVAL_MS = 1000;
+export const STALL_HANDLING_RETRY_PERIOD_MS = 1000;
+export const JUMP_THRESHOLD_SECONDS = 0.5; // tolerance needed as some browsers stalls playback before reaching buffered range end
+export const SKIP_BUFFER_HOLE_STEP_SECONDS = 0.1;
 
 export default class GapController {
   constructor (config, media, fragmentTracker, hls) {
