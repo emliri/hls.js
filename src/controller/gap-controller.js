@@ -101,12 +101,13 @@ export default class GapController {
     // update internal store
     this.currentPlayheadTime = currentPlayheadTime;
 
-    // not moved
+    // not moved - return false here
     if (currentPlayheadTime === previousPlayheadTime) {
       return false;
     }
 
-    // has moved ...
+    // has moved ... - will return true from here
+    // but need to (re-)init internal state
 
     this.hasPlayed = true;
 
