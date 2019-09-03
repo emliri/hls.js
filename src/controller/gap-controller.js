@@ -111,6 +111,7 @@ export default class GapController {
 
     this.hasPlayed = true;
 
+    // lazy setup media event listeners if not done yet
     if (!this.onMediaStalled) {
       this.onMediaStalled = this._onMediaStalled.bind(this);
       this.media.addEventListener('waiting', this.onMediaStalled);
@@ -124,11 +125,12 @@ export default class GapController {
 
     logger.log(`playhead seemed stalled but is now moving again from ${previousPlayheadTime} to ${currentPlayheadTime}`);
 
+    // reset all the stall flags
     this.stallHandledAtTime = null;
     this.stallDetectedAtTime = null;
     this.nudgeRetry = 0;
 
-    // If it was reported stalled, let's report the recovery
+    // If it was reported stalled, let's log the recovery
     if (this.stallReported) {
       const now = window.performance.now();
       const currentPlayheadTime = this.media.currentTime;
